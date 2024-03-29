@@ -1,16 +1,20 @@
-import { useRef } from "react";
+import { useRef} from "react";
 import "./App.css";
 import addBtn from "./assets/addBtn.svg";
 import check from "./assets/Check.svg";
 import trash from "./assets/TrashSimple.svg";
+import back from "./assets/arrow-go-back-fill.svg"
 import { useSelector, useDispatch } from "react-redux";
-import { addTodo, deleteTodo, completed } from "./redux/todoSlice";
+import { addTodo, deleteTodo, toggleCompleted } from "./redux/todoSlice";
 
 function App() {
-  const dispatch = useDispatch();
-  const todos = useSelector((state) => state.todo);
   const inputRef = useRef();
- console.log(todos);
+  let todos = useSelector((state) => state.todo.todos);
+  const dispatch = useDispatch();
+
+  const completedTodos = todos.filter((todo) => todo.completed === true).length;
+  const pendingTodos = todos.length - completedTodos;
+
   function handleSubmit(e) {
     e.preventDefault();
     if (inputRef.current.value !== "") {
@@ -28,7 +32,7 @@ function handleDelete(id) {
     dispatch(deleteTodo(id));
   }
   function handleCompleted(id) {
-    dispatch(completed(id));
+    dispatch(toggleCompleted(id));
   }
   return (
     <div className="container">
@@ -38,12 +42,12 @@ function handleDelete(id) {
           <img src={addBtn} alt="Button" />
         </button>
       </form>
-      <p className="tasks_title">Tasks to do - {todos.length}</p>
+      <p className={pendingTodos == 0 ? "none" : "tasks_title_undone"}>Tasks to do - {pendingTodos}</p>
       <div className="tasks">
               <ul className="tasks_lists">
       {todos.length > 0 &&
         todos.map((todo, index) => {
-          // console.log(todo.id);
+          if(todo.completed == false){
           return (
             
                 <li key={index} className="task_list">
@@ -59,9 +63,29 @@ function handleDelete(id) {
                 </li>
               
           );
+          }
         })}
         </ul>
+        <p className={completedTodos == 0 ? "none" : "tasks_title_done"}>Done- {completedTodos}</p>
+            <ul className="tasks_lists">
+              {
+                todos.length > 0 && 
+                todos.map((todo, index) => {
+                  if(todo.completed === true) {
+                    return (
+                      <li key={index} className="task_list">
+                        <span className="task_completed">{todo.text}</span>
+                          <button onClick={() => handleCompleted(todo.id)} className="task_check">
+                            <img src={back} alt="check" />
+                          </button>
+                      </li>
+                    )
+                  }
+                })
+              }
+            </ul>
             </div>
+            
     </div>
   );
 }

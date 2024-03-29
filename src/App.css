@@ -28,7 +28,8 @@ input {
   cursor: pointer;
 }
 
-.tasks_title{
+.tasks_title_undone,
+.tasks_title_done{
   font-size: 16px;
   color: #fff;
   margin-bottom: 17px;
@@ -38,6 +39,7 @@ input {
 display: flex;
 flex-direction: column;
 gap: 16px;
+margin-bottom: 20px;
 }
 
 .task_list {
@@ -72,4 +74,14 @@ gap: 16px;
 .task_check:hover,
 .task_trash:hover{
   background-color: rgba(239, 237, 242, 0.1);
+}
+
+
+.task_completed {
+  color: #78CFB0;
+  text-decoration: line-through;
+}
+
+.none{
+  display: none;
 }
